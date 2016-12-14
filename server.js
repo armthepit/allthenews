@@ -1,20 +1,9 @@
-
 // Required NPM Packages
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var app = express();
 var mongoose = require('mongoose');
-
-// Mongoose Connect
-var db = 'mongodb://localhost/goodnewsdb';
-mongoose.connect(db, function(err){
-  if(err){
-    console.log(err);
-  } else {
-    console.log('mongoose connection is sucessful');
-  }
-});
 
 // Public Settings
 app.use(express.static(__dirname + '/public'));
@@ -40,4 +29,4 @@ app.use('/',routes);
 //Port
 app.listen(port, function() {
     console.log("lisenting on port:" + port);
-// });
+});
