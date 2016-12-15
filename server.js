@@ -13,7 +13,7 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 3000;
 
 // Database
-// require("./config/connection");
+require("./config/connection");
 
 // Use morgan logging
 app.use(logger("dev"));
