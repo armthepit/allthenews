@@ -36,5 +36,12 @@ router.get('/test', function(req, res) {
     });
 });
 
+router.get('/', function(req,res){
+	res.redirect('/index')
+});
+
+router.get('/index', function(req, res){
+	res.send('Index file')
+})
 
 module.exports = router;
