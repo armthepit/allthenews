@@ -7,13 +7,14 @@ var cheerio = require('cheerio');
 var router = express.Router();
 var mongoose = require('mongoose');
 
+var Articles = require("../models/articles");
+
 // Website To Be Scraped
 var url = "http://www.goodnewsnetwork.org/latest-news/";
 
 // Test Route To Verify Scraping Works From Route
 router.get('/test', function(req, res) {
     // body of the html with request
-    // request('http://www.goodnewsnetwork.org/latest-news/', function(error, response, html) {
     request(url, function(error, response, html) {	
         // load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(html);
