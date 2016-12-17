@@ -38,7 +38,7 @@ router.get('/test', function(req, res) {
 });
 
 router.get('/', function(req, res){
-	res.redirect('/scrape');
+	res.redirect('/index');
 });
 
 router.get('/scrape', function(req,res){
@@ -71,11 +71,17 @@ router.get('/scrape', function(req,res){
 			});
 		});
     });
-    res.redirect('/index');
 });
 
 router.get('/index', function(req, res){
 	res.render('index');
+})
+
+router.get('/articles', function(req,res){
+	Articles.find({}, function(err, doc){
+		if(err) throw err;
+		res.json(doc);
+	})
 })
 
 module.exports = router;
