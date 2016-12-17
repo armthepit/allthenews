@@ -15,7 +15,7 @@ var url = "http://www.goodnewsnetwork.org/latest-news/";
 // Test Route To Verify Scraping Works From Route
 router.get('/test', function(req, res) {
     // body of the html with request
-    request(url, function(error, response, html) {	
+    request(url, function(error, response, html) {
         // load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(html);
 		var result = [];
@@ -24,7 +24,7 @@ router.get('/test', function(req, res) {
 			var storyLink = $(element).find("a").attr("href");
 			var imgLink = $(element).find("a").find("img").attr("src");
 			var summary = $(element).find(".td-post-text-excerpt").text();
-			// Push the image's URL (saved to the imgLink var) into the result array
+			summary = summary.replace(/(\r\n|\n|\r|\t|\s+)/gm, " ").trim();
 			result.push({ 
 				Title: title,
 				Story: storyLink,
@@ -37,12 +37,45 @@ router.get('/test', function(req, res) {
     });
 });
 
-router.get('/', function(req,res){
-	res.redirect('/index')
+router.get('/', function(req, res){
+	res.redirect('/scrape');
+});
+
+router.get('/scrape', function(req,res){
+    request(url, function(error, response, html) {	
+        // load that into cheerio and save it to $ for a shorthand selector
+        var $ = cheerio.load(html);
+		var result = [];
+		$(".span6").each(function(i, element) {
+		    var title = $(element).find("a").find("img").attr("title");
+		    var imgLink = $(element).find("a").find("img").attr("src");
+		    var storyLink = $(element).find("a").attr("href");
+		    var summary = $(element).find(".td-post-text-excerpt").text();
+		    summary = summary.replace(/(\r\n|\n|\r|\t|\s+)/gm, " ").trim();
+			result[i] = ({ 
+				title: title,
+				imgLink: imgLink,
+				storyLink: storyLink,
+				summary: summary
+			});	
+			Articles.findOne({'title': title}, function(err, articleRecord) {
+				if(err) throw err;
+				if(articleRecord == null) {
+					Articles.create(result[i], function(err, record) {
+						if(err) throw err;
+						console.log("Record Added");
+					})
+				} else {
+					console.log("No Record Added");
+				}
+			});
+		});
+    });
+    res.redirect('/index');
 });
 
 router.get('/index', function(req, res){
-	res.send('Index file')
+	res.render('index');
 })
 
 module.exports = router;

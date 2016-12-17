@@ -4,19 +4,19 @@ var Comment = require("./comments");
 var articlesSchema = new mongoose.Schema({
 	title: {
 		type: String, 
-		required: true
-	},
-	storyLink: {
-		type: String, 
-		required: true
+		// required: true
 	},
 	imgLink: {
 		type: String, 
-		required: true
+		// required: true
+	},	
+	storyLink: {
+		type: String, 
+/*		required: true*/
 	},
 	summary: {
 		type: String, 
-		required: true
+		// required: true
 	},		
 	comments: [Comment],
 	createdAt: {
