@@ -6,6 +6,9 @@ var request = require('request');
 var cheerio = require('cheerio');
 var router = express.Router();
 var mongoose = require('mongoose');
+var Promise = require("bluebird");
+
+mongoose.Promise = Promise;
 
 var Articles = require("../models/articles");
 
@@ -38,12 +41,11 @@ router.get('/test', function(req, res) {
 });
 
 router.get('/', function(req, res){
-	res.redirect('/index');
+	res.render('index');
 });
 
 router.get('/scrape', function(req,res){
     request(url, function(error, response, html) {	
-        // load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(html);
 		var result = [];
 		$(".span6").each(function(i, element) {
@@ -64,24 +66,21 @@ router.get('/scrape', function(req,res){
 					Articles.create(result[i], function(err, record) {
 						if(err) throw err;
 						console.log("Record Added");
-					})
+					});
 				} else {
 					console.log("No Record Added");
 				}
-			});
+			});	
 		});
-    });
+    });	
 });
 
-router.get('/index', function(req, res){
-	res.render('index');
-})
-
 router.get('/articles', function(req,res){
-	Articles.find({}, function(err, doc){
+	// Articles.find({}, function(err, doc){
+	Articles.find().sort({ createdAt: -1 }).exec(function(err, doc) { 
 		if(err) throw err;
 		res.json(doc);
-	})
-})
+	});
+});
 
 module.exports = router;

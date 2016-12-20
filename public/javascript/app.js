@@ -1,32 +1,33 @@
 $(document).ready(function(){
 
 	var previousArticle = 0;
-	var currentArticle = 0;
+	var currentArticle = [];
 	var nextArticle = 0;
 	var articleList = [];
+	var display = '';
 
-	// scrape();
-	// getArticles();
+	$.getJSON('/scrape', function(){
+	});
 
-	// var scrape = function() {
-		$.ajax({
-		type: "GET",
-		url: '/scrape'
-		}).done(function() {
-			console.log('scraped');
-		}).fail(function() {
-			alert("Sorry. Server unavailable.");
-		});
-	// };	
+	$(document).on('click','#getArticles', function(){
+		$.getJSON('/articles', function(data){
+			currentArticle = data[0];
+			buildArticle(currentArticle);
+		}); 		
+	});
 
-		$.getJSON('/articles', function(data) {
-			for( var i = 0; i < data.length; i++) {
-				articleList.push(data[i]);
-			}
-		}).done(function() {
-			console.log(articleList);
-		});
 
+
+	var buildArticle = function(currentArticle) {
+		$('#title').text(currentArticle.title);
+		$("#image").removeClass("hidden");
+		$('#image').attr('src', currentArticle.imgLink);
+		$('#summary').text(currentArticle.summary);
+		$("#readArticle").removeClass("hidden");
+		$('#article').attr('href', currentArticle.storyLink);
+		$("#getArticles").addClass("hidden");
+		$("#comments").removeClass("hidden");		
+	}
 
 
 
