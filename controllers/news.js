@@ -11,6 +11,7 @@ var Promise = require("bluebird");
 mongoose.Promise = Promise;
 
 var Articles = require("../models/articles");
+var Comments = require("../models/comments");
 
 // Website To Be Scraped
 var url = "http://www.goodnewsnetwork.org/latest-news/";
@@ -61,14 +62,17 @@ router.get('/scrape', function(req,res){
 				summary: summary
 			});	
 			Articles.findOne({'title': title}, function(err, articleRecord) {
-				if(err) throw err;
-				if(articleRecord == null) {
-					Articles.create(result[i], function(err, record) {
-						if(err) throw err;
-						console.log("Record Added");
-					});
+				if(err) {
+					console.log(err);
 				} else {
-					console.log("No Record Added");
+					if(articleRecord == null) {
+						Articles.create(result[i], function(err, record) {
+							if(err) throw err;
+							console.log("Record Added");
+						});
+					} else {
+						console.log("No Record Added");
+					}					
 				}
 			});	
 		});
@@ -76,10 +80,19 @@ router.get('/scrape', function(req,res){
 });
 
 router.get('/articles', function(req,res){
-	// Articles.find({}, function(err, doc){
-	Articles.find().sort({ createdAt: -1 }).exec(function(err, doc) { 
+	Articles.find().sort({ createdAt: -1 }).exec(function(err, data) { 
 		if(err) throw err;
-		res.json(doc);
+		res.json(data);
+	});
+});
+
+router.get('/getcomments/:id', function(req,res){
+	Comments.find({'articleId': req.params.id}).exec(function(err, data) {
+		if(err) {
+			console.log(err);
+		} else {
+			res.json(data);
+		}	
 	});
 });
 
