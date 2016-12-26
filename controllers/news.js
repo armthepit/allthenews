@@ -86,13 +86,27 @@ router.get('/articles', function(req,res){
 	});
 });
 
-router.get('/getcomments/:id', function(req,res){
+router.get('/comments/:id', function(req,res){
 	Comments.find({'articleId': req.params.id}).exec(function(err, data) {
 		if(err) {
 			console.log(err);
 		} else {
 			res.json(data);
 		}	
+	});
+});
+
+router.post('/addcomment/:id', function(req,res){
+	console.log(req.params.id+' '+req.body.comment);
+	Comments.create({
+		articleId: req.params.id,
+		comment: req.body.comment
+	}, function(err, docs){    
+		if(err){
+			console.log(err);			
+		} else {
+			console.log("New Comment Added");
+		}
 	});
 });
 

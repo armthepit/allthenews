@@ -1,10 +1,13 @@
 $(document).ready(function(){
 
+	var articleList = [];
+	var articleId = '';
+	var article = '';
 	var previousArticle = 0;
 	var currentArticle = 0;
-	var nextArticle = 0;
-	var article = '';
-	var articleList = [];
+	var nextArticle = 0;	
+
+	$('#comments').addClass('hidden');
 
 	$.getJSON('/scrape', function(){
 	});
@@ -21,13 +24,25 @@ $(document).ready(function(){
 		article = articleList[previousArticle];
 		currentArticle = previousArticle;
 		showArticle(article);
-	}) 
+	}); 
 
 	$(document).on('click','.next', function(){
 		article = articleList[nextArticle];
 		currentArticle = nextArticle;
 		showArticle(article);
-	}) 
+	}); 
+
+	$(document).on('click','#addComment', function(){
+		if($('#commentText').val() != '') {
+			var comment = $('#commentText').val();
+			$.post("/addcomment/" + articleId, {comment: comment}, function(e) {
+				e.preventDefault();
+			});
+			$('#commentText').val('');
+			showComments(articleId);
+		}
+	});	
+	
 
 	var showArticle = function(article) {
 		$('#title').text(article.title);
@@ -37,7 +52,6 @@ $(document).ready(function(){
 		$("#readArticle").removeClass("hidden");
 		$('#article').attr('href', article.storyLink);
 		$("#getArticles").addClass("hidden");
-		$("#comments").removeClass("hidden");
 		$("#navigation").empty();
 		previousArticle = currentArticle - 1;
 		if(previousArticle >= 0) {
@@ -51,20 +65,22 @@ $(document).ready(function(){
 		} else {
 			$('#navigation').append('<button id="'+nextArticle+'" class="btn btn-primary pull-right disabled next">Next Article</button>');
 		}
-		var articleId = article._id;
+		articleId = article._id;
 		showComments(articleId);
 	}
 
 	var showComments = function(articleId) {
-		var comments = '';
-		$.getJSON('getcomments/'+articleId, function(data){
-			console.log(data.length);
+		$("#comments").removeClass("hidden");
+		$("#articleComments").empty();
+		var commentText = '';
+		$.getJSON('comments/'+articleId, function(data){
 			for(var i = 0; i < data.length; i++){
-				comments = comments + '<p'+data[i]._id+'>'+data[i].comment+'<span id="deleteComment" class="glyphicon glyphicon-remove text-danger"></span></p>';
+				commentText = commentText + '<p'+data[i]._id+'>'+data[i].comment+'<span id="deleteComment" class="glyphicon glyphicon-remove text-danger"></span></p>';
 			}
-			$("#comment").append(comments);
+			$("#articleComments").append(commentText);
 		});
 	}
+
 
 
 });
