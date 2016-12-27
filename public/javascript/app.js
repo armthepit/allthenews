@@ -34,10 +34,12 @@ $(document).ready(function(){
 
 	$(document).on('click','#addComment', function(){
 		if($('#commentText').val() != '') {
+			var name = $('#name').val();
 			var comment = $('#commentText').val();
-			$.post("/addcomment/" + articleId, {comment: comment}, function(e) {
+			$.post("/addcomment/" + articleId, {name: name, comment: comment}, function(e) {
 				e.preventDefault();
 			});
+			$('#name').val('');
 			$('#commentText').val('');
 			showComments(articleId);
 		}
@@ -75,7 +77,8 @@ $(document).ready(function(){
 		var commentText = '';
 		$.getJSON('comments/'+articleId, function(data){
 			for(var i = 0; i < data.length; i++){
-				commentText = commentText + '<p'+data[i]._id+'>'+data[i].comment+'<span id="deleteComment" class="glyphicon glyphicon-remove text-danger"></span></p>';
+				commentText = commentText + '<div class="well"><span id="'+data[i]._id+'" class="glyphicon glyphicon-remove text-danger"></span>'+data[i].comment+' - '+data[i].name+'</div>';
+				// commentText = commentText + '<p'+data[i]._id+'>'+data[i].comment+'<span id="deleteComment" class="glyphicon glyphicon-remove text-danger"></span></p>';
 			}
 			$("#articleComments").append(commentText);
 		});

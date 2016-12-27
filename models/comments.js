@@ -4,6 +4,9 @@ var commentsSchema = new mongoose.Schema({
 	articleId: {
 		type: String
 	},
+	name: {
+		type: String
+	},
 	comment: {
 		type: String
 	},

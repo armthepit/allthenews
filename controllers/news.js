@@ -100,6 +100,7 @@ router.post('/addcomment/:id', function(req,res){
 	console.log(req.params.id+' '+req.body.comment);
 	Comments.create({
 		articleId: req.params.id,
+		name: req.body.name,
 		comment: req.body.comment
 	}, function(err, docs){    
 		if(err){
@@ -109,7 +110,5 @@ router.post('/addcomment/:id', function(req,res){
 		}
 	});
 });
-
-
 
 module.exports = router;
