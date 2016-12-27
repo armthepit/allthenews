@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+	// Default variables
 	var articleList = [];
 	var articleId = '';
 	var article = '';
@@ -9,9 +10,11 @@ $(document).ready(function(){
 
 	$('#comments').addClass('hidden');
 
+	// Scrape website on initial page load
 	$.getJSON('/scrape', function(){
 	});
 
+	// Get all articles when read articles button clicked and build an array of articles
 	$(document).on('click','#getArticles', function(){
 		$.getJSON('/articles', function(data){
 			articleList = data;
@@ -20,18 +23,21 @@ $(document).ready(function(){
 		}); 		
 	});
 
+	// Display previous article from the array of articles
 	$(document).on('click','.previous', function(){
 		article = articleList[previousArticle];
 		currentArticle = previousArticle;
 		showArticle(article);
 	}); 
 
+	// Display next article from the array of articles
 	$(document).on('click','.next', function(){
 		article = articleList[nextArticle];
 		currentArticle = nextArticle;
 		showArticle(article);
 	}); 
 
+	// Add comment to article and update comments display
 	$(document).on('click','#addComment', function(){
 		if($('#commentText').val() != '') {
 			var name = $('#name').val();
@@ -45,6 +51,7 @@ $(document).ready(function(){
 		}
 	});	
 	
+	// Delete comment from article and update comments display
 	$(document).on('click','.deletecomment', function(){
 		commentId = this.id;
 		// console.log("comment id "+ commentId);
@@ -56,6 +63,7 @@ $(document).ready(function(){
 		showComments(articleId);
 	});		
 
+	// Function to build article display
 	var showArticle = function(article) {
 		$('#title').text(article.title);
 		$("#image").removeClass("hidden");
@@ -81,6 +89,7 @@ $(document).ready(function(){
 		showComments(articleId);
 	}
 
+	// Function to build comments display for article
 	var showComments = function(articleId) {
 		$("#comments").removeClass("hidden");
 		$("#articleComments").empty();
