@@ -45,6 +45,16 @@ $(document).ready(function(){
 		}
 	});	
 	
+	$(document).on('click','.deletecomment', function(){
+		commentId = this.id;
+		// console.log("comment id "+ commentId);
+		$.ajax({
+			method: "GET",
+			url:"/deletecomment/" + commentId
+		}).done(function(data){
+		})
+		showComments(articleId);
+	});		
 
 	var showArticle = function(article) {
 		$('#title').text(article.title);
@@ -77,13 +87,10 @@ $(document).ready(function(){
 		var commentText = '';
 		$.getJSON('comments/'+articleId, function(data){
 			for(var i = 0; i < data.length; i++){
-				commentText = commentText + '<div class="well"><span id="'+data[i]._id+'" class="glyphicon glyphicon-remove text-danger"></span>'+data[i].comment+' - '+data[i].name+'</div>';
-				// commentText = commentText + '<p'+data[i]._id+'>'+data[i].comment+'<span id="deleteComment" class="glyphicon glyphicon-remove text-danger"></span></p>';
+				commentText = commentText + '<div class="well"><span id="'+data[i]._id+'" class="glyphicon glyphicon-remove text-danger deletecomment"></span> '+data[i].comment+' - '+data[i].name+'</div>';
 			}
 			$("#articleComments").append(commentText);
 		});
 	}
-
-
 
 });

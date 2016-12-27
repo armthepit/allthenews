@@ -45,7 +45,7 @@ router.get('/', function(req, res){
 	res.render('index');
 });
 
-router.get('/scrape', function(req,res){
+router.get('/scrape', function(req, res){
     request(url, function(error, response, html) {	
         var $ = cheerio.load(html);
 		var result = [];
@@ -79,14 +79,14 @@ router.get('/scrape', function(req,res){
     });	
 });
 
-router.get('/articles', function(req,res){
+router.get('/articles', function(req, res){
 	Articles.find().sort({ createdAt: -1 }).exec(function(err, data) { 
 		if(err) throw err;
 		res.json(data);
 	});
 });
 
-router.get('/comments/:id', function(req,res){
+router.get('/comments/:id', function(req, res){
 	Comments.find({'articleId': req.params.id}).exec(function(err, data) {
 		if(err) {
 			console.log(err);
@@ -96,7 +96,7 @@ router.get('/comments/:id', function(req,res){
 	});
 });
 
-router.post('/addcomment/:id', function(req,res){
+router.post('/addcomment/:id', function(req, res){
 	console.log(req.params.id+' '+req.body.comment);
 	Comments.create({
 		articleId: req.params.id,
@@ -109,6 +109,17 @@ router.post('/addcomment/:id', function(req,res){
 			console.log("New Comment Added");
 		}
 	});
+});
+
+router.get('/deletecomment/:id', function(req, res){
+	console.log(req.params.id)
+	Comments.remove({'_id': req.params.id}).exec(function(err, data){
+		if(err){
+			console.log(err);
+		} else {
+			console.log("Comment deleted");
+		}
+	})
 });
 
 module.exports = router;
