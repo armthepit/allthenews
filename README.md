@@ -10,7 +10,7 @@ The user has the option to enter their name and comment.
 
 At the beginning of each article the user can navigate thru all articles scrapped by clicking on the prevous and next article buttons.
 
-![All The News] (public/assets/images/allthenews.gif)
+![All The News] (public/images/allthenews.gif)
 
 Technology Used.
 
