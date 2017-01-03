@@ -10,7 +10,9 @@ The user has the option to enter their name and comment.
 
 At the beginning of each article the user can navigate thru all articles scrapped by clicking on the prevous and next article buttons.
 
-Technology used in app.
+![All The News] (public/assets/images/allthenews.gif)
+
+Technology Used.
 
 Express for routing
 Mongodb to store the articles and comments.
